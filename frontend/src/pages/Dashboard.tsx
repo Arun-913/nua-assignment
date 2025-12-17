@@ -10,9 +10,9 @@ import { X } from 'lucide-react';
 import { Label } from '@radix-ui/react-label';
 import { MultiSelect } from '@/components/ui/MultiSelect';
 import { AvatarDropdown } from '@/components/ui/AvatarDropDown';
+import { Oval } from 'react-loader-spinner'; 
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL || 'https://nua-assignment-z1fs.onrender.com';
-console.log("klklj:", API_BASE)
 
 type UploadedFile = {
   id: string;
@@ -45,6 +45,7 @@ export default function Dashboard() {
   const [selectedOptions, setSelectedOptions] = useState<Options[]>([]);
   const [alreadyShared, setAlreadyShared] = useState<User[]>([]);
   const fileRef = useRef<string | null>(null)
+  const [isCheckingLogin, setIsCheckingLogin] = useState<Boolean>(true);
   
   const removeOption = (value: any) => {
     setSelectedOptions((prev: any) => prev.filter((v: any) => v !== value));
@@ -233,9 +234,11 @@ export default function Dashboard() {
   useEffect(() => {
     async function init() {
       try {
+        setIsCheckingLogin(true);
         const response = (await axios.get(`${API_BASE}/api/auth/check-login`, { withCredentials: true })).data;
         setUser(response);
         getUploadedFile();
+        setIsCheckingLogin(false);
       } catch (error) {
         navigate('/signin');
       }
@@ -243,6 +246,25 @@ export default function Dashboard() {
 
     init();
   }, [])
+
+  if (isCheckingLogin) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4">
+        <Oval
+          height={80}
+          width={80}
+          color="#a855f7"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+          ariaLabel='oval-loading'
+          secondaryColor="#c084fc"
+          strokeWidth={2}
+          strokeWidthSecondary={2}
+        />
+      </div>
+    );
+  }
 
   const handleLogout = async() => {
     try {
