@@ -107,9 +107,21 @@ router.post('/:id/share-link', auth, async (req: Request, res: Response): Promis
   }
 });
 
-router.get('/:token', async (req: Request, res: Response): Promise<any> => {
+router.get('/:token', auth, async (req: Request, res: Response): Promise<any> => {
   try {
     const file = await File.findOne({
+      $or:[
+        {
+          sharedWith: {
+            $elemMatch: {
+              $eq: req.user.id,
+            },
+          },
+        },
+        {
+          owner: req.user.id
+        }
+      ],
       shareTokens: {
         $elemMatch: {
           token: req.params.token,
