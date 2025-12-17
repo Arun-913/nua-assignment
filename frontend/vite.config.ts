@@ -14,7 +14,7 @@ export default defineConfig({
       '/api': {
         target: 'https://nua-assignment-z1fs.onrender.com',
         changeOrigin: true,
-        secure: true
+        secure: true,
       }
     }
   },
