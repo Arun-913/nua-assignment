@@ -64,7 +64,7 @@ router.post('/signin', async (req: Request, res: Response): Promise<any> => {
     }
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '7d' });
     return res.cookie('token', `Bearer ${token}`, {
-      sameSite: 'lax',
+      sameSite: 'none',
       path: '/',
       httpOnly: true,
       secure: true,
