@@ -1,0 +1,1 @@
+{"root":["./src/config.ts","./src/server.ts","./src/middleware/auth.ts","./src/middleware/multerConfig.ts","./src/models/File.ts","./src/models/User.ts","./src/routes/auth.ts","./src/routes/file.ts","./src/routes/share.ts"],"version":"5.9.3"}
