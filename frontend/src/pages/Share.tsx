@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
+const API_BASE = import.meta.env.VITE_BACKEND_URL || 'https://nua-assignment-z1fs.onrender.com';
+
 export default function Share() {
   const { id } = useParams<{ id: string }>();
   const [fileUrl, setFileUrl] = useState<string | null>(null);
@@ -14,7 +16,7 @@ export default function Share() {
 
     async function checkLogin() {
       try {
-        await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/check-login`, { withCredentials: true });
+        await axios.get(`${API_BASE}/api/auth/check-login`, { withCredentials: true });
         fetchFile();
       } catch (error) {
         navigate('/signin');
@@ -24,7 +26,7 @@ export default function Share() {
     const fetchFile = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/share/${id}`,
+          `${API_BASE}/api/share/${id}`,
           {
             responseType: "blob",
             withCredentials: true,

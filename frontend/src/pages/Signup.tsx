@@ -7,6 +7,8 @@ import { toast } from 'sonner';
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
+const API_BASE = import.meta.env.VITE_BACKEND_URL || 'https://nua-assignment-z1fs.onrender.com';
+
 interface ValidationError {
   field: string;
   message: string;
@@ -19,7 +21,7 @@ export default function Signup() {
 
   const onSubmit = async (data: any) => {
     try {
-      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/signup`, data);
+      await axios.post(`${API_BASE}/api/auth/signup`, data);
       toast.success('Signup in successful!, Please signin.', {
         duration: 1000,
         onAutoClose: () => navigate('/signin'),
@@ -52,7 +54,7 @@ export default function Signup() {
   useEffect(() => {
     async function init() {
       try {
-        (await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/check-login`, { withCredentials: true })).data;
+        (await axios.get(`${API_BASE}/api/auth/check-login`, { withCredentials: true })).data;
         navigate('/');
       } catch (error) {
         console.log(error);

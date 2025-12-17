@@ -11,6 +11,9 @@ import { Label } from '@radix-ui/react-label';
 import { MultiSelect } from '@/components/ui/MultiSelect';
 import { AvatarDropdown } from '@/components/ui/AvatarDropDown';
 
+const API_BASE = import.meta.env.VITE_BACKEND_URL || 'https://nua-assignment-z1fs.onrender.com';
+console.log("klklj:", API_BASE)
+
 type UploadedFile = {
   id: string;
   name: string;
@@ -72,7 +75,7 @@ export default function Dashboard() {
 
   const getUploadedFile = async() => {
     try {
-      const response = (await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/files/dashboard`, { withCredentials: true })).data;
+      const response = (await axios.get(`${API_BASE}/api/files/dashboard`, { withCredentials: true })).data;
       setFiles(response.map((file: any) => ({
         id: file._id,
         name: file.originalName,
@@ -97,7 +100,7 @@ export default function Dashboard() {
       selectedFiles.forEach(file => {
         formData.append('files', file);
       });
-      const response = (await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/files/upload`, formData, { withCredentials: true })).data;
+      const response = (await axios.post(`${API_BASE}/api/files/upload`, formData, { withCredentials: true })).data;
       setFiles(prev => [...response.files.map((file: any) => ({
         id: file._id,
         name: file.originalName,
@@ -123,7 +126,7 @@ export default function Dashboard() {
 
   const deleteFile = async(id: string) => {
     try {
-      (await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/files/${id}/delete`, { withCredentials: true, responseType: 'blob' }));
+      (await axios.delete(`${API_BASE}/api/files/${id}/delete`, { withCredentials: true, responseType: 'blob' }));
       setFiles(prev => prev.filter(file => file.id !== id));
       toast.success('File deleted successfully!');
     } catch (error) {
@@ -138,7 +141,7 @@ export default function Dashboard() {
 
   const handleDownloadFile = async (id: string) => {
     try {
-      const response = (await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/files/${id}`, { withCredentials: true, responseType: 'blob' }));
+      const response = (await axios.get(`${API_BASE}/api/files/${id}`, { withCredentials: true, responseType: 'blob' }));
       const blob = response.data;
 
       const contentDisposition = response.headers['content-disposition'];
@@ -167,7 +170,7 @@ export default function Dashboard() {
   const handleCopyFile = async (id: string) => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/share/${id}/share-link`,
+        `${API_BASE}/api/share/${id}/share-link`,
         { expiresInHours: 24 },
         { withCredentials: true }
       );
@@ -188,8 +191,8 @@ export default function Dashboard() {
     setModalOpen(true);
     try {
       const [sharedUsers, users] = await Promise.all([
-        axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/share/${id}/users`,{ withCredentials: true }),
-        axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/users`,{ withCredentials: true })
+        axios.get(`${API_BASE}/api/share/${id}/users`,{ withCredentials: true }),
+        axios.get(`${API_BASE}/api/auth/users`,{ withCredentials: true })
       ]);
 
       users.data = users.data.filter((user: any) => !sharedUsers.data.find((sharedUser: any) => sharedUser._id === user._id))
@@ -212,7 +215,7 @@ export default function Dashboard() {
       const formData = {
         userIds: selectedOptions.map((option: any) => option.value)
       };
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/share/${id}/share-users`, formData, { withCredentials: true });
+      const response = await axios.post(`${API_BASE}/api/share/${id}/share-users`, formData, { withCredentials: true });
       setModalOpen(false);
       toast.success(response.data.message);
       setSelectedFiles([]);
@@ -230,7 +233,7 @@ export default function Dashboard() {
   useEffect(() => {
     async function init() {
       try {
-        const response = (await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/check-login`, { withCredentials: true })).data;
+        const response = (await axios.get(`${API_BASE}/api/auth/check-login`, { withCredentials: true })).data;
         setUser(response);
         getUploadedFile();
       } catch (error) {
@@ -243,7 +246,7 @@ export default function Dashboard() {
 
   const handleLogout = async() => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`, { withCredentials: true });
+      const response = await axios.get(`${API_BASE}/api/auth/logout`, { withCredentials: true });
       toast.success(response.data.message, {
         duration: 1000,
         onAutoClose: () => navigate('/signin'),
