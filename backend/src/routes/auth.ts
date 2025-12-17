@@ -116,7 +116,14 @@ router.get('/check-login', async (req: Request, res: Response): Promise<any> => 
 
 router.get('/logout', async (req: Request, res: Response): Promise<any> => {
   try {
-    return res.clearCookie('token').json({ message: 'Logout successfull!' });
+    res.clearCookie('token', {
+      path: '/',
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      partitioned: true,
+    });
+    return res.json({ message: 'Logout successfull!' });
   } catch (error) {
     console.log(error);
     return res.status(400).json({

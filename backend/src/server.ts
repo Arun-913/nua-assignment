@@ -9,6 +9,9 @@ import AuthRouter from './routes/auth.js';
 import FileRouter from './routes/file.js';
 import ShareRouter from './routes/share.js';
 import cookieParser from 'cookie-parser';
+import { dirname, join } from "path";
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 
 const allowedOrigins = [
   'http://localhost:5173',
@@ -33,9 +36,17 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json({ limit: '50mb' }));
+app.options('/api/files/upload', cors());
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(morgan('combined'));
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const uploadDir = join(__dirname, '..', 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 await mongoose.connect(MONGODB_URI);
 
 // Routes
