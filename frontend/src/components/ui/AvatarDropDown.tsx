@@ -15,7 +15,6 @@ interface AvatarDropdownProps {
 export const AvatarDropdown: React.FC<AvatarDropdownProps> = ({
   userName,
   items,
-  size = 10,
 }) => {
   const initials = userName
     .split(" ")
@@ -25,7 +24,7 @@ export const AvatarDropdown: React.FC<AvatarDropdownProps> = ({
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger
-        className={`w-${size} h-${size} bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold cursor-pointer`}
+        className={`w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold cursor-pointer`}
       >
         {initials}
       </DropdownMenu.Trigger>

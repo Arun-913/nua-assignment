@@ -5,6 +5,7 @@ import axios, { AxiosError } from 'axios';
 import NameField from '@/components/fields/Name';
 import { toast } from 'sonner';
 import { Link, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 interface ValidationError {
   field: string;
@@ -47,6 +48,19 @@ export default function Signup() {
   };
 
   const fieldError = (path: string) => path.split(".").reduce((acc: any, key: string) => acc?.[key], errors);
+
+  useEffect(() => {
+    async function init() {
+      try {
+        (await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/check-login`, { withCredentials: true })).data;
+        navigate('/');
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    init();
+  });
   
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4">
